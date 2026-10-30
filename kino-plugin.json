@@ -1,10 +1,10 @@
 {
   "id": "reloj-kino",
   "name": "Reloj",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "apiVersion": 14,
   "entry": "plugin.js",
-  "description": "Un reloj con la hora y la fecha, que se mueve solo.",
+  "description": "Un reloj con la hora y la fecha de tu aparato, que se mueve solo.",
   "hosts": ["kinotvapp.github.io"],
   "capabilities": ["screen"],
   "screen": { "label": "Reloj", "labelEn": "Clock", "icon": "star", "menuOpens": "screen" }
