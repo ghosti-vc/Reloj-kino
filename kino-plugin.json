@@ -1,7 +1,7 @@
 {
   "id": "reloj-kino",
   "name": "Reloj",
-  "version": "0.2.2",
+  "version": "0.2.0",
   "apiVersion": 14,
   "entry": "plugin.js",
   "description": "Un reloj con la hora y la fecha de tu aparato, en pantalla y como pestaña del reproductor.",
@@ -15,4 +15,4 @@
     "icon": "info",
     "kinds": ["title", "live"]
   }
-} 
+}
