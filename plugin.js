@@ -38,8 +38,10 @@ function clockTree(now) {
     crossAxisAlignment: "center",
     mainAxisAlignment: "center",
     children: [
+      { type: "Text", text: "🎃", style: "h1", textAlign: "center" },
       { type: "Text", text: p.time, style: "h1", bold: true, textAlign: "center" },
       { type: "Text", text: p.date, style: "h4", color: "muted", textAlign: "center" },
+      { type: "Text", text: "🎃      🎃      🎃", style: "h3", textAlign: "center" },
     ],
   };
 }
