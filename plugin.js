@@ -10,7 +10,7 @@ function pad(n) {
   return n < 10 ? "0" + n : String(n);
 }
 
-// La zona del aparato; si no la entrega, la de México.
+// La zona del aparato; si no la entrega (0), la de México.
 function offsetMin(now) {
   let det = 0;
   try {
@@ -29,14 +29,12 @@ function parts(now) {
   };
 }
 
-export async function screen({ state }) {
-  const now = state && typeof state.now === "number" ? state.now : Date.now();
+// Solo hora y fecha, sin botones.
+function clockTree(now) {
   const p = parts(now);
   return {
     type: "Column",
-    every: { ms: 1000, event: "tick" },
-    padding: { compact: 16, expanded: 48 },
-    gap: 16,
+    gap: 8,
     crossAxisAlignment: "center",
     mainAxisAlignment: "center",
     children: [
@@ -46,9 +44,41 @@ export async function screen({ state }) {
   };
 }
 
+// Pantalla del menú
+export async function screen({ state }) {
+  const now = state && typeof state.now === "number" ? state.now : Date.now();
+  const tree = clockTree(now);
+  tree.every = { ms: 1000, event: "tick" };
+  tree.padding = { compact: 16, expanded: 48 };
+  tree.gap = 16;
+  return tree;
+}
+
 export async function screenEvent({ name }) {
   if (name === "open" || name === "tick") {
     return { state: { now: Date.now() } };
   }
   return null;
+}
+
+// Botón del reproductor: abre un panel con el reloj
+export async function panel(context) {
+  const now = Date.now();
+  if (!(context.features || []).includes("screen")) {
+    return {
+      title: "Reloj",
+      refreshMs: 2000,
+      elements: [
+        { type: "status", text: parts(now).time },
+        { type: "text", text: parts(now).date },
+      ],
+    };
+  }
+  return {
+    format: "screen",
+    title: "Reloj",
+    titleEn: "Clock",
+    refreshMs: 2000,
+    root: clockTree(now),
+  };
 }
