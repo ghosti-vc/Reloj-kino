@@ -1,11 +1,12 @@
 {
   "id": "reloj-kino",
   "name": "Reloj",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "apiVersion": 14,
   "entry": "plugin.js",
-  "description": "Un reloj con la hora y la fecha de tu aparato, que se mueve solo.",
+  "description": "Un reloj con la hora y la fecha de tu aparato, que se mueve solo. También en el reproductor.",
   "hosts": ["kinotvapp.github.io"],
-  "capabilities": ["screen"],
-  "screen": { "label": "Reloj", "labelEn": "Clock", "icon": "star", "menuOpens": "screen" }
+  "capabilities": ["screen", "playerPanelTab"],
+  "screen": { "label": "Reloj", "labelEn": "Clock", "icon": "star", "menuOpens": "screen" },
+  "panel": { "contributes": true, "label": "Reloj", "labelEn": "Clock", "icon": "star" }
 }
