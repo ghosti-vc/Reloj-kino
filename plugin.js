@@ -3,10 +3,10 @@ const MEXICO = -360; // CDMX: UTC-6, sin horario de verano
 // Si no se logra saber dónde estás, se usa esta ciudad.
 const DEFAULT_PLACE = { lat: 19.43, lon: -99.13 }; // Ciudad de México
 
-const DAYS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+const DAYS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 const MONTHS = [
-  "enero", "febrero", "marzo", "abril", "mayo", "junio",
-  "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
+  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
 ];
 
 function pad(n) {
