@@ -4,7 +4,7 @@
   "version": "0.8.3",
   "apiVersion": 14,
   "entry": "plugin.js",
-  "description": "Un reloj con la hora, la fecha y el clima de tu ciudad, que se mueve solo. También en el reproductor.",
+  "description": "Un reloj con la hora, la fecha y el clima de tu ciudad, Aparecera en menu inicio en forma de estrella. También en el reproductor con el lado derecho del contro al lado del ajuste de brillo.",
   "hosts": [
     "kinotvapp.github.io",
     "api.open-meteo.com",
