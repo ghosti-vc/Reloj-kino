@@ -1,7 +1,7 @@
 {
   "id": "reloj-kino",
   "name": "Reloj",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "apiVersion": 14,
   "entry": "plugin.js",
   "description": "Un reloj con la hora, la fecha y el clima de hoy, que se mueve solo. También en el reproductor.",
@@ -16,7 +16,7 @@
   "screen": {
     "label": "Reloj",
     "labelEn": "Clock",
-    "icon": "",
+    "icon": "star",
     "menuOpens": "screen"
   },
   "panel": {
@@ -27,6 +27,6 @@
     ],
     "label": "Reloj",
     "labelEn": "Clock",
-    "iconFile": "clock.png"
+    "icon": "star"
   }
 }
