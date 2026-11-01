@@ -105,7 +105,7 @@ async function loadWeather() {
   }
 }
 
-// Solo clima (icono y temperatura), hora y fecha. Sin botones.
+// Solo clima (icono), hora y fecha. Sin botones.
 function clockTree(now, wx, temp) {
   const p = parts(now);
   return {
@@ -123,7 +123,6 @@ function clockTree(now, wx, temp) {
           wx === MOON
             ? { type: "Text", text: wx, style: "h1", color: "muted" }
             : { type: "Text", text: wx, style: "h1" },
-          ...(temp ? [{ type: "Text", text: temp, style: "h4", color: "muted" }] : []),
         ],
       }] : []),
       { type: "Text", text: p.time, style: "h1", bold: true, textAlign: "center" },
@@ -169,7 +168,7 @@ export async function panel(context) {
       title: "Reloj",
       refreshMs: 2000,
       elements: [
-        { type: "status", text: (wx ? wx + " " : "") + (temp ? temp + " · " : "") + parts(now).time },
+        { type: "status", text: (wx ? wx + " " : "") + parts(now).time },
         { type: "text", text: parts(now).date },
       ],
     };
