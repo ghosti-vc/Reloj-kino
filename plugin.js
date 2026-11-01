@@ -74,7 +74,7 @@ async function loadPlace() {
 // Se guarda 25 min en kino.storage para no pedirlo a cada rato.
 async function loadWeather() {
   try {
-    const cached = kino.storage.get("wx3");
+    const cached = kino.storage.get("wx4");
     if (cached) {
       const w = JSON.parse(cached);
       if (w && typeof w.e === "string") return w;
@@ -84,7 +84,7 @@ async function loadWeather() {
     const place = await loadPlace();
     const url =
       "https://api.open-meteo.com/v1/forecast?latitude=" + place.lat + "&longitude=" + place.lon +
-      "&current=weather_code,is_day&daily=weather_code&forecast_days=1&timezone=auto";
+      "&current=weather_code,is_day,temperature_2m&daily=weather_code&forecast_days=1&timezone=auto";
     const r = await kino.fetch(url, { timeoutMs: 8000 });
     if (!r.ok) return null;
     const j = r.json();
@@ -94,9 +94,10 @@ async function loadWeather() {
     const night = !!cur && cur.is_day === 0;
     if (night && typeof cur.weather_code === "number") code = cur.weather_code;
     if (typeof code !== "number") return null;
-    const w = { e: night && code <= 1 ? MOON : icon(code) };
+    const t = cur && typeof cur.temperature_2m === "number" ? Math.round(cur.temperature_2m) + "°C" : "";
+    const w = { e: night && code <= 1 ? MOON : icon(code), t: t };
     try {
-      kino.storage.set("wx3", JSON.stringify(w), { ttlMs: 25 * 60 * 1000 });
+      kino.storage.set("wx4", JSON.stringify(w), { ttlMs: 25 * 60 * 1000 });
     } catch (e) {}
     return w;
   } catch (e) {
@@ -104,8 +105,8 @@ async function loadWeather() {
   }
 }
 
-// Solo clima, hora y fecha. Sin botones.
-function clockTree(now, wx) {
+// Solo clima (icono y temperatura), hora y fecha. Sin botones.
+function clockTree(now, wx, temp) {
   const p = parts(now);
   return {
     type: "Column",
@@ -113,9 +114,18 @@ function clockTree(now, wx) {
     crossAxisAlignment: "center",
     mainAxisAlignment: "center",
     children: [
-      ...(wx ? [wx === MOON
-        ? { type: "Text", text: wx, style: "h1", color: "muted", textAlign: "center" }
-        : { type: "Text", text: wx, style: "h1", textAlign: "center" }] : []),
+      ...(wx ? [{
+        type: "Row",
+        gap: 12,
+        mainAxisAlignment: "center",
+        crossAxisAlignment: "center",
+        children: [
+          wx === MOON
+            ? { type: "Text", text: wx, style: "h1", color: "muted" }
+            : { type: "Text", text: wx, style: "h1" },
+          ...(temp ? [{ type: "Text", text: temp, style: "h2", bold: true }] : []),
+        ],
+      }] : []),
       { type: "Text", text: p.time, style: "h1", bold: true, textAlign: "center" },
       { type: "Text", text: p.date, style: "h4", color: "muted", textAlign: "center" },
     ],
@@ -126,7 +136,8 @@ function clockTree(now, wx) {
 export async function screen({ state }) {
   const now = state && typeof state.now === "number" ? state.now : Date.now();
   const wx = state && typeof state.wx === "string" ? state.wx : "";
-  const tree = clockTree(now, wx);
+  const temp = state && typeof state.temp === "string" ? state.temp : "";
+  const tree = clockTree(now, wx, temp);
   tree.every = [
     { ms: 1000, event: "tick" },
     { ms: 30 * 60 * 1000, event: "weather" },
@@ -139,7 +150,7 @@ export async function screen({ state }) {
 export async function screenEvent({ name }) {
   if (name === "open" || name === "weather") {
     const w = await loadWeather();
-    return { state: w ? { now: Date.now(), wx: w.e } : { now: Date.now() } };
+    return { state: w ? { now: Date.now(), wx: w.e, temp: w.t || "" } : { now: Date.now() } };
   }
   if (name === "tick") {
     return { state: { now: Date.now() } };
@@ -152,12 +163,13 @@ export async function panel(context) {
   const now = Date.now();
   const w = await loadWeather();
   const wx = w ? w.e : "";
+  const temp = w ? w.t || "" : "";
   if (!(context.features || []).includes("screen")) {
     return {
       title: "Reloj",
       refreshMs: 2000,
       elements: [
-        { type: "status", text: (wx ? wx + " " : "") + parts(now).time },
+        { type: "status", text: (wx ? wx + " " : "") + (temp ? temp + " · " : "") + parts(now).time },
         { type: "text", text: parts(now).date },
       ],
     };
@@ -167,6 +179,6 @@ export async function panel(context) {
     title: "Reloj",
     titleEn: "Clock",
     refreshMs: 2000,
-    root: clockTree(now, wx),
+    root: clockTree(now, wx, temp),
   };
 }
