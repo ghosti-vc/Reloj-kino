@@ -123,7 +123,7 @@ function clockTree(now, wx, temp) {
           wx === MOON
             ? { type: "Text", text: wx, style: "h1", color: "muted" }
             : { type: "Text", text: wx, style: "h1" },
-          ...(temp ? [{ type: "Text", text: temp, style: "h2", bold: true }] : []),
+          ...(temp ? [{ type: "Text", text: temp, style: "h4", color: "muted" }] : []),
         ],
       }] : []),
       { type: "Text", text: p.time, style: "h1", bold: true, textAlign: "center" },
