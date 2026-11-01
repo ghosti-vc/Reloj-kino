@@ -1,7 +1,7 @@
 const MEXICO = -360; // CDMX: UTC-6, sin horario de verano
 
 // Si no se logra saber dónde estás, se usa esta ciudad.
-const DEFAULT_PLACE = { city: "Ciudad de México", lat: 19.43, lon: -99.13 };
+const DEFAULT_PLACE = { lat: 19.43, lon: -99.13 }; // Ciudad de México
 
 const DAYS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
 const MONTHS = [
@@ -32,6 +32,9 @@ function parts(now) {
   };
 }
 
+// Luna: un símbolo de texto (no emoji) para poder pintarla de gris.
+const MOON = "☾";
+
 // Código de clima (WMO) -> sol, nube o nube con lluvia
 function icon(code) {
   if (code <= 1) return "☀️";
@@ -54,7 +57,6 @@ async function loadPlace() {
       const j = r.json();
       if (j && j.success !== false && typeof j.latitude === "number" && typeof j.longitude === "number") {
         const p = {
-          city: typeof j.city === "string" ? j.city : "",
           lat: Math.round(j.latitude * 100) / 100,
           lon: Math.round(j.longitude * 100) / 100,
         };
@@ -68,11 +70,11 @@ async function loadPlace() {
   return DEFAULT_PLACE;
 }
 
-// Clima de tu lugar: pronóstico de HOY de día; de noche, el cielo de ahora (🌙 si está despejado).
+// Clima de tu lugar: pronóstico de HOY de día; de noche, el cielo de ahora (luna gris si está despejado).
 // Se guarda 25 min en kino.storage para no pedirlo a cada rato.
 async function loadWeather() {
   try {
-    const cached = kino.storage.get("wx2");
+    const cached = kino.storage.get("wx3");
     if (cached) {
       const w = JSON.parse(cached);
       if (w && typeof w.e === "string") return w;
@@ -92,9 +94,9 @@ async function loadWeather() {
     const night = !!cur && cur.is_day === 0;
     if (night && typeof cur.weather_code === "number") code = cur.weather_code;
     if (typeof code !== "number") return null;
-    const w = { e: night && code <= 1 ? "🌙" : icon(code), city: place.city || "" };
+    const w = { e: night && code <= 1 ? MOON : icon(code) };
     try {
-      kino.storage.set("wx2", JSON.stringify(w), { ttlMs: 25 * 60 * 1000 });
+      kino.storage.set("wx3", JSON.stringify(w), { ttlMs: 25 * 60 * 1000 });
     } catch (e) {}
     return w;
   } catch (e) {
@@ -102,8 +104,8 @@ async function loadWeather() {
   }
 }
 
-// Solo clima, hora, fecha y ciudad. Sin botones.
-function clockTree(now, wx, city) {
+// Solo clima, hora y fecha. Sin botones.
+function clockTree(now, wx) {
   const p = parts(now);
   return {
     type: "Column",
@@ -111,10 +113,11 @@ function clockTree(now, wx, city) {
     crossAxisAlignment: "center",
     mainAxisAlignment: "center",
     children: [
-      ...(wx ? [{ type: "Text", text: wx, style: "h1", textAlign: "center" }] : []),
+      ...(wx ? [wx === MOON
+        ? { type: "Text", text: wx, style: "h1", color: "muted", textAlign: "center" }
+        : { type: "Text", text: wx, style: "h1", textAlign: "center" }] : []),
       { type: "Text", text: p.time, style: "h1", bold: true, textAlign: "center" },
       { type: "Text", text: p.date, style: "h4", color: "muted", textAlign: "center" },
-      ...(city ? [{ type: "Text", text: "📍 " + city, style: "p", color: "muted", textAlign: "center" }] : []),
     ],
   };
 }
@@ -123,8 +126,7 @@ function clockTree(now, wx, city) {
 export async function screen({ state }) {
   const now = state && typeof state.now === "number" ? state.now : Date.now();
   const wx = state && typeof state.wx === "string" ? state.wx : "";
-  const city = state && typeof state.city === "string" ? state.city : "";
-  const tree = clockTree(now, wx, city);
+  const tree = clockTree(now, wx);
   tree.every = [
     { ms: 1000, event: "tick" },
     { ms: 30 * 60 * 1000, event: "weather" },
@@ -137,7 +139,7 @@ export async function screen({ state }) {
 export async function screenEvent({ name }) {
   if (name === "open" || name === "weather") {
     const w = await loadWeather();
-    return { state: w ? { now: Date.now(), wx: w.e, city: w.city } : { now: Date.now() } };
+    return { state: w ? { now: Date.now(), wx: w.e } : { now: Date.now() } };
   }
   if (name === "tick") {
     return { state: { now: Date.now() } };
@@ -150,14 +152,13 @@ export async function panel(context) {
   const now = Date.now();
   const w = await loadWeather();
   const wx = w ? w.e : "";
-  const city = w ? w.city : "";
   if (!(context.features || []).includes("screen")) {
     return {
       title: "Reloj",
       refreshMs: 2000,
       elements: [
         { type: "status", text: (wx ? wx + " " : "") + parts(now).time },
-        { type: "text", text: parts(now).date + (city ? " · " + city : "") },
+        { type: "text", text: parts(now).date },
       ],
     };
   }
@@ -166,6 +167,6 @@ export async function panel(context) {
     title: "Reloj",
     titleEn: "Clock",
     refreshMs: 2000,
-    root: clockTree(now, wx, city),
+    root: clockTree(now, wx),
   };
 }
