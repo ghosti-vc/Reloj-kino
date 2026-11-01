@@ -1,13 +1,14 @@
 {
   "id": "reloj-kino",
   "name": "Reloj",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "apiVersion": 14,
   "entry": "plugin.js",
-  "description": "Un reloj con la hora, la fecha y el clima de hoy, que se mueve solo. También en el reproductor.",
+  "description": "Un reloj con la hora, la fecha y el clima de tu ciudad, que se mueve solo. También en el reproductor.",
   "hosts": [
     "kinotvapp.github.io",
-    "api.open-meteo.com"
+    "api.open-meteo.com",
+    "ipwho.is"
   ],
   "capabilities": [
     "screen",
