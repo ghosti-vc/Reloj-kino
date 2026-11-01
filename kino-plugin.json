@@ -1,7 +1,7 @@
 {
   "id": "reloj-kino",
   "name": "Reloj",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "apiVersion": 14,
   "entry": "plugin.js",
   "description": "Un reloj con la hora, la fecha y el clima de tu ciudad. Aparecera en forma de estrella en tu menu de ajustes y al ver tu pelicula favorita solo preciona el lado derecho de tu control y aparecera sin pausar la reproduccion.",
