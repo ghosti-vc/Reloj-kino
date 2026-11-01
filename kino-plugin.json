@@ -4,7 +4,7 @@
   "version": "0.8.3",
   "apiVersion": 14,
   "entry": "plugin.js",
-  "description": "Un reloj con la hora, la fecha y el clima de tu ciudad, Aparecera en menu inicio en forma de estrella. También en el reproductor con el lado derecho del contro al lado del ajuste de brillo.",
+  "description": "Un reloj con la hora, la fecha y el clima de tu ciudad, Aparecera en menu inicio en forma de estrella. Al ver una pelicula toca el boton derecho de tu control y aparecera sin salir de tu reproductor.",
   "hosts": [
     "kinotvapp.github.io",
     "api.open-meteo.com",
