@@ -16,7 +16,7 @@
   "screen": {
     "label": "Reloj",
     "labelEn": "Clock",
-    "icon": "star",
+    "icon": "",
     "menuOpens": "screen"
   },
   "panel": {
