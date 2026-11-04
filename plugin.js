@@ -154,18 +154,6 @@ function clockContent(now, wx, wxDone) {
     mainAxisAlignment: "start",
     children: [
       {
-        type: "Row",
-        key: "time",
-        gap: 4,
-        fill: true,
-        mainAxisAlignment: "end",
-        crossAxisAlignment: "center",
-        children: [
-          { type: "Text", text: p.hm, style: "h5", bold: true },
-          { type: "Text", text: ":" + p.sec, style: "h5", color: "muted" },
-        ],
-      },
-      {
         type: "Column",
         key: "body",
         gap: 24,
@@ -180,6 +168,17 @@ function clockContent(now, wx, wxDone) {
             fill: true,
             crossAxisAlignment: "center",
             children: [
+              {
+                type: "Row",
+                key: "time",
+                gap: 4,
+                mainAxisAlignment: "center",
+                crossAxisAlignment: "center",
+                children: [
+                  { type: "Text", text: p.hm, style: "h5", bold: true },
+                  { type: "Text", text: ":" + p.sec, style: "h5", color: "muted" },
+                ],
+              },
               { type: "Text", text: p.weekday, style: "h5", color: "muted", textAlign: "center", fill: true },
               { type: "Text", text: p.rest, style: "h5", color: "muted", textAlign: "center", fill: true },
             ],
