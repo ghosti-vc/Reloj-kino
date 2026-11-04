@@ -171,7 +171,7 @@ function clockContent(now, wx, wxDone) {
         fill: true,
         crossAxisAlignment: "center",
         children: [
-          { type: "Text", text: p.weekday, style: "h2", textAlign: "center", fill: true },
+          { type: "Text", text: p.weekday, style: "h5", color: "muted", textAlign: "center", fill: true },
           { type: "Text", text: p.rest, style: "h5", color: "muted", textAlign: "center", fill: true },
         ],
       },
