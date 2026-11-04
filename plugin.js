@@ -139,7 +139,8 @@ function weatherCard(wx, wxDone) {
   return { type: "Skeleton", key: "weather-loading", shape: "circle", width: 64, height: 64 };
 }
 
-// El reloj: hora enorme (hero) con segundos grises, fecha centrada y tarjeta del clima.
+// El reloj: la hora arriba a la derecha, con el mismo tamaño (h5) que la fecha;
+// debajo, la fecha centrada y la tarjeta del clima.
 // Lo usan la pantalla del menú y el panel del reproductor.
 function clockContent(now, wx, wxDone) {
   const p = parts(now);
@@ -147,35 +148,45 @@ function clockContent(now, wx, wxDone) {
   return {
     type: "Column",
     key: "clock",
-    gap: 24,
+    gap: 8,
     padding: { compact: 16, expanded: 24 },
-    minHeight: { compact: 400, expanded: 480 },
     crossAxisAlignment: "center",
-    mainAxisAlignment: "center",
+    mainAxisAlignment: "start",
     children: [
       {
         type: "Row",
         key: "time",
-        gap: 8,
-        mainAxisAlignment: "center",
-        crossAxisAlignment: "end",
+        gap: 4,
+        fill: true,
+        mainAxisAlignment: "end",
+        crossAxisAlignment: "center",
         children: [
-          { type: "Text", text: p.hm, style: "hero", bold: true },
-          { type: "Text", text: ":" + p.sec, style: "h1", color: "muted" },
+          { type: "Text", text: p.hm, style: "h5", bold: true },
+          { type: "Text", text: ":" + p.sec, style: "h5", color: "muted" },
         ],
       },
       {
         type: "Column",
-        key: "date",
-        gap: 4,
-        fill: true,
+        key: "body",
+        gap: 24,
+        minHeight: { compact: 340, expanded: 400 },
         crossAxisAlignment: "center",
+        mainAxisAlignment: "center",
         children: [
-          { type: "Text", text: p.weekday, style: "h5", color: "muted", textAlign: "center", fill: true },
-          { type: "Text", text: p.rest, style: "h5", color: "muted", textAlign: "center", fill: true },
+          {
+            type: "Column",
+            key: "date",
+            gap: 4,
+            fill: true,
+            crossAxisAlignment: "center",
+            children: [
+              { type: "Text", text: p.weekday, style: "h5", color: "muted", textAlign: "center", fill: true },
+              { type: "Text", text: p.rest, style: "h5", color: "muted", textAlign: "center", fill: true },
+            ],
+          },
+          ...(card ? [card] : []),
         ],
       },
-      ...(card ? [card] : []),
     ],
   };
 }
