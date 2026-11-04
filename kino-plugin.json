@@ -1,10 +1,10 @@
 {
   "id": "reloj-kino",
   "name": "Reloj",
-  "version": "0.9.32",
+  "version": "0.9.33",
   "apiVersion": 14,
   "entry": "plugin.js",
-  "description": "Un reloj con la hora, la fecha y el clima de tu ciudad. Aparecera en forma de estrella en tu menu de ajustes y al ver tu pelicula/serie favorita aparecera en el area de etiquetas (kinosocial,noticias) sin pausar la reproduccion.",
+  "description": "Un reloj con la hora y la fecha. Aparece en tu menú y, al ver tu película o serie favorita, en el área de etiquetas (kinosocial, noticias) sin pausar la reproducción.",
   "hosts": [
     "kinotvapp.github.io",
     "api.open-meteo.com",
@@ -17,7 +17,7 @@
   "screen": {
     "label": "Reloj",
     "labelEn": "Clock",
-    "icon": "star",
+    "icon": "schedule",
     "menuOpens": "screen"
   },
   "panel": {
@@ -28,6 +28,6 @@
     ],
     "label": "Reloj",
     "labelEn": "Clock",
-    "icon": "star"
+    "icon": "schedule"
   }
 }
