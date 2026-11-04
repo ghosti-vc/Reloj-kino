@@ -139,7 +139,7 @@ function weatherCard(wx, wxDone) {
   return { type: "Skeleton", key: "weather-loading", shape: "circle", width: 64, height: 64 };
 }
 
-// El reloj: hora grande con segundos pequeños y grises, fecha centrada y tarjeta del clima.
+// El reloj: hora enorme (hero) con segundos grises, fecha centrada y tarjeta del clima.
 // Lo usan la pantalla del menú y el panel del reproductor.
 function clockContent(now, wx, wxDone) {
   const p = parts(now);
@@ -156,12 +156,12 @@ function clockContent(now, wx, wxDone) {
       {
         type: "Row",
         key: "time",
-        gap: 4,
+        gap: 8,
         mainAxisAlignment: "center",
         crossAxisAlignment: "end",
         children: [
-          { type: "Text", text: p.hm, style: "h1", bold: true },
-          { type: "Text", text: ":" + p.sec, style: "h3", color: "muted" },
+          { type: "Text", text: p.hm, style: "hero", bold: true },
+          { type: "Text", text: ":" + p.sec, style: "h1", color: "muted" },
         ],
       },
       {
