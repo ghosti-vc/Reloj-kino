@@ -30,7 +30,7 @@ function parts(now) {
   return { hm, weekday, rest, date: weekday + " " + rest };
 }
 
-// El reloj: la hora grande y la fecha debajo, todo centrado.
+// El reloj: la hora muy grande y el día y la fecha pequeños debajo, todo centrado.
 // Lo usan la pantalla del menú y el panel del reproductor.
 function clockContent(now) {
   const p = parts(now);
@@ -57,9 +57,9 @@ function clockContent(now) {
             fill: true,
             crossAxisAlignment: "center",
             children: [
-              { type: "Text", key: "time", text: p.hm, style: "h3", bold: true, textAlign: "center", fill: true },
-              { type: "Text", text: p.weekday, style: "h5", color: "muted", textAlign: "center", fill: true },
-              { type: "Text", text: p.rest, style: "h5", color: "muted", textAlign: "center", fill: true },
+              { type: "Text", key: "time", text: p.hm, style: "h1", bold: true, textAlign: "center", fill: true },
+              { type: "Text", text: p.weekday, style: "h6", color: "muted", textAlign: "center", fill: true },
+              { type: "Text", text: p.rest, style: "h6", color: "muted", textAlign: "center", fill: true },
             ],
           },
         ],
