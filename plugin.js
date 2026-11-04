@@ -58,8 +58,8 @@ function clockContent(now) {
             crossAxisAlignment: "center",
             children: [
               { type: "Text", key: "time", text: p.hm, style: "h1", bold: true, textAlign: "center", fill: true },
-              { type: "Text", text: p.weekday, style: "h6", color: "muted", textAlign: "center", fill: true },
-              { type: "Text", text: p.rest, style: "h6", color: "muted", textAlign: "center", fill: true },
+              { type: "Text", text: p.weekday, style: "caption", color: "muted", textAlign: "center", fill: true },
+              { type: "Text", text: p.rest, style: "caption", color: "muted", textAlign: "center", fill: true },
             ],
           },
         ],
