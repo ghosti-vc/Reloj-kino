@@ -4,7 +4,7 @@
   "version": "0.9.35",
   "apiVersion": 14,
   "entry": "plugin.js",
-  "description": "Un reloj con la hora y la fecha. Aparece en tu menú y, al ver tu película o serie favorita, en el área de etiquetas (kinosocial, noticias) sin pausar la reproducción.",
+  "description": "Hora, Dia y fecha. Aparece en tu menú y, al ver tu película o serie favorita, en el área de etiquetas (kinosocial, noticias) sin pausar la reproducción.",
   "hosts": [
     "kinotvapp.github.io",
     "api.open-meteo.com",
