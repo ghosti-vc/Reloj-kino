@@ -119,16 +119,16 @@ async function loadWeather() {
   }
 }
 
-// Tarjeta del clima: icono grande y una palabra. Mientras carga, un esqueleto.
+// Clima: icono grande y una palabra, sin recuadro. Mientras carga, un esqueleto redondo.
 function weatherCard(wx, wxDone) {
   if (wx) {
     const d = describe(wx);
     return {
-      type: "Card",
+      type: "Column",
       key: "weather",
-      variant: "filled",
-      minWidth: 160,
-      padding: 24,
+      gap: 4,
+      fill: true,
+      crossAxisAlignment: "center",
       children: [
         { type: "Text", text: wx, style: "h1", textAlign: "center", fill: true, ...(wx === MOON ? { color: "muted" } : {}) },
         { type: "Text", text: d.es, textEn: d.en, style: "caption", color: "muted", textAlign: "center", fill: true },
@@ -136,7 +136,7 @@ function weatherCard(wx, wxDone) {
     };
   }
   if (wxDone) return null;
-  return { type: "Skeleton", key: "weather-loading", shape: "block", width: 160, height: 96 };
+  return { type: "Skeleton", key: "weather-loading", shape: "circle", width: 64, height: 64 };
 }
 
 // El reloj: hora grande con segundos pequeños y grises, fecha centrada y tarjeta del clima.
