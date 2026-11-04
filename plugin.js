@@ -65,8 +65,7 @@ function clockContent(now) {
                 mainAxisAlignment: "center",
                 crossAxisAlignment: "center",
                 children: [
-                  { type: "Text", text: p.hm, style: "h4", bold: true },
-                  { type: "Text", text: ":" + p.sec, style: "h4", color: "muted" },
+                  { type: "Text", text: p.hm, style: "h3", bold: true },
                 ],
               },
               { type: "Text", text: p.weekday, style: "h5", color: "muted", textAlign: "center", fill: true },
@@ -84,7 +83,7 @@ export async function screen({ state }) {
   const now = state && typeof state.now === "number" ? state.now : Date.now();
   return {
     type: "SingleChildScrollView",
-    every: [{ ms: 1000, event: "tick" }],
+    every: [{ ms: 10000, event: "tick" }],
     children: [clockContent(now)],
   };
 }
@@ -104,7 +103,7 @@ export async function panel(context) {
       title: "Reloj",
       refreshMs: 2000,
       elements: [
-        { type: "status", text: parts(now).time },
+        { type: "status", text: parts(now).hm },
         { type: "text", text: parts(now).date },
       ],
     };
