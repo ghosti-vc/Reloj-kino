@@ -139,7 +139,7 @@ function weatherCard(wx, wxDone) {
   return { type: "Skeleton", key: "weather-loading", shape: "circle", width: 64, height: 64 };
 }
 
-// El reloj: hora grande con segundos pequeños y grises, fecha centrada y tarjeta del clima.
+// El reloj: hora enorme (style "hero") con segundos grises, fecha centrada y tarjeta del clima.
 // Lo usan la pantalla del menú y el panel del reproductor.
 function clockContent(now, wx, wxDone) {
   const p = parts(now);
@@ -156,12 +156,12 @@ function clockContent(now, wx, wxDone) {
       {
         type: "Row",
         key: "time",
-        gap: 4,
+        gap: 8,
         mainAxisAlignment: "center",
         crossAxisAlignment: "end",
         children: [
-          { type: "Text", text: p.hm, style: "h1", bold: true },
-          { type: "Text", text: ":" + p.sec, style: "h3", color: "muted" },
+          { type: "Text", text: p.hm, style: "hero", bold: true },
+          { type: "Text", text: ":" + p.sec, style: "h1", color: "muted" },
         ],
       },
       {
@@ -180,18 +180,36 @@ function clockContent(now, wx, wxDone) {
   };
 }
 
-// Pantalla del menú (solo dibuja; el clima se pide en screenEvent)
+// Pantalla del menú (solo dibuja; el clima se pide en screenEvent).
+// Una sola barra compacta: la de Kino y la nuestra fundidas en una.
 export async function screen({ state }) {
   const now = state && typeof state.now === "number" ? state.now : Date.now();
   const wx = state && typeof state.wx === "string" ? state.wx : "";
   const wxDone = !!state && state.wxDone === true;
   return {
-    type: "SingleChildScrollView",
+    type: "Scaffold",
     every: [
       { ms: 1000, event: "tick" },
       { ms: 30 * 60 * 1000, event: "weather" },
     ],
-    children: [clockContent(now, wx, wxDone)],
+    appBar: {
+      type: "AppBar",
+      mergeWithKinoBar: true,
+      dense: true,
+      title: "Reloj",
+      titleEn: "Clock",
+      leading: {
+        type: "IconButton",
+        icon: "close",
+        labelText: "Cerrar",
+        labelTextEn: "Close",
+        onPressed: { close: true },
+      },
+    },
+    body: {
+      type: "SingleChildScrollView",
+      children: [clockContent(now, wx, wxDone)],
+    },
   };
 }
 
