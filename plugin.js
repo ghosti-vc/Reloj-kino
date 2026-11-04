@@ -21,17 +21,16 @@ function offsetMin(now) {
   return det ? det : MEXICO;
 }
 
-// Hora (hh:mm y segundos por separado), día de la semana y resto de la fecha.
+// Hora (hh:mm), día de la semana y resto de la fecha.
 function parts(now) {
   const d = new Date(now + offsetMin(now) * 60000);
   const hm = pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes());
-  const sec = pad(d.getUTCSeconds());
   const weekday = DAYS[d.getUTCDay()];
   const rest = d.getUTCDate() + " de " + MONTHS[d.getUTCMonth()] + " de " + d.getUTCFullYear();
-  return { hm, sec, weekday, rest, time: hm + ":" + sec, date: weekday + " " + rest };
+  return { hm, weekday, rest, date: weekday + " " + rest };
 }
 
-// El reloj: la hora en h4 (un poco más grande) y la fecha en h5, todo centrado.
+// El reloj: la hora grande y la fecha debajo, todo centrado.
 // Lo usan la pantalla del menú y el panel del reproductor.
 function clockContent(now) {
   const p = parts(now);
@@ -58,17 +57,7 @@ function clockContent(now) {
             fill: true,
             crossAxisAlignment: "center",
             children: [
-              {
-                type: "Row",
-                key: "time",
-                gap: 4,
-                mainAxisAlignment: "center",
-                crossAxisAlignment: "end",
-                children: [
-                  { type: "Text", text: p.hm, style: "h3", bold: true },
-                  { type: "Text", text: ":" + p.sec, style: "caption", bold: true },
-                ],
-              },
+              { type: "Text", key: "time", text: p.hm, style: "h3", bold: true, textAlign: "center", fill: true },
               { type: "Text", text: p.weekday, style: "h5", color: "muted", textAlign: "center", fill: true },
               { type: "Text", text: p.rest, style: "h5", color: "muted", textAlign: "center", fill: true },
             ],
@@ -104,7 +93,7 @@ export async function panel(context) {
       title: "Reloj",
       refreshMs: 2000,
       elements: [
-        { type: "status", text: parts(now).time },
+        { type: "status", text: parts(now).hm },
         { type: "text", text: parts(now).date },
       ],
     };
