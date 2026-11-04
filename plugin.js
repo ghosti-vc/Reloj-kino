@@ -186,20 +186,12 @@ export async function screen({ state }) {
   const wx = state && typeof state.wx === "string" ? state.wx : "";
   const wxDone = !!state && state.wxDone === true;
   return {
-    type: "Scaffold",
+    type: "SingleChildScrollView",
     every: [
       { ms: 1000, event: "tick" },
       { ms: 30 * 60 * 1000, event: "weather" },
     ],
-    appBar: {
-      type: "AppBar",
-      mergeWithKinoBar: true,
-      dense: true,
-      title: "Reloj",
-      titleEn: "Clock",
-      leading: { type: "IconButton", icon: "close", labelText: "Cerrar", labelTextEn: "Close", onPressed: { close: true } },
-    },
-    body: { type: "SingleChildScrollView", children: [clockContent(now, wx, wxDone)] },
+    children: [clockContent(now, wx, wxDone)],
   };
 }
 
