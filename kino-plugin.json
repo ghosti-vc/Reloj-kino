@@ -1,7 +1,7 @@
 {
   "id": "reloj-kino",
   "name": "reloj-kino",
-  "version": "0.9.60",
+  "version": "0.9.61",
   "apiVersion": 23,
   "entry": "plugin.js",
   "description": "Ve el reloj en la esquina superior derecha del reproductor en la TV cada que veas canales en vivo, pelicuals o series sin interrumpir la reproduccion",
@@ -12,8 +12,15 @@
     "kinotvapp.github.io"
   ],
   "capabilities": [
-    "playerSlot"
+    "playerSlot",
+    "screen"
   ],
+  "screen": {
+    "label": "Reloj",
+    "labelEn": "Clock",
+    "icon": "schedule",
+    "menuOpens": "screen"
+  },
   "slot": {
     "elements": [
       {
@@ -37,26 +44,10 @@
       "type": "select",
       "default": "normal",
       "options": [
-        {
-          "value": "small",
-          "label": "Pequeño",
-          "labelEn": "Small"
-        },
-        {
-          "value": "normal",
-          "label": "Normal (por defecto)",
-          "labelEn": "Normal (default)"
-        },
-        {
-          "value": "large",
-          "label": "Grande",
-          "labelEn": "Large"
-        },
-        {
-          "value": "xlarge",
-          "label": "Muy grande",
-          "labelEn": "Extra large"
-        }
+        { "value": "small", "label": "Pequeño", "labelEn": "Small" },
+        { "value": "normal", "label": "Normal (por defecto)", "labelEn": "Normal (default)" },
+        { "value": "large", "label": "Grande", "labelEn": "Large" },
+        { "value": "xlarge", "label": "Muy grande", "labelEn": "Extra large" }
       ]
     },
     {
@@ -66,46 +57,14 @@
       "type": "select",
       "default": "auto",
       "options": [
-        {
-          "value": "auto",
-          "label": "Blanco de Kino (por defecto)",
-          "labelEn": "Kino white (default)"
-        },
-        {
-          "value": "white",
-          "label": "Blanco",
-          "labelEn": "White"
-        },
-        {
-          "value": "yellow",
-          "label": "Amarillo",
-          "labelEn": "Yellow"
-        },
-        {
-          "value": "cyan",
-          "label": "Cian",
-          "labelEn": "Cyan"
-        },
-        {
-          "value": "green",
-          "label": "Verde",
-          "labelEn": "Green"
-        },
-        {
-          "value": "orange",
-          "label": "Naranja",
-          "labelEn": "Orange"
-        },
-        {
-          "value": "pink",
-          "label": "Rosa",
-          "labelEn": "Pink"
-        },
-        {
-          "value": "black",
-          "label": "Negro",
-          "labelEn": "Black"
-        }
+        { "value": "auto", "label": "Blanco de Kino (por defecto)", "labelEn": "Kino white (default)" },
+        { "value": "white", "label": "Blanco", "labelEn": "White" },
+        { "value": "yellow", "label": "Amarillo", "labelEn": "Yellow" },
+        { "value": "cyan", "label": "Cian", "labelEn": "Cyan" },
+        { "value": "green", "label": "Verde", "labelEn": "Green" },
+        { "value": "orange", "label": "Naranja", "labelEn": "Orange" },
+        { "value": "pink", "label": "Rosa", "labelEn": "Pink" },
+        { "value": "black", "label": "Negro", "labelEn": "Black" }
       ]
     }
   ]
