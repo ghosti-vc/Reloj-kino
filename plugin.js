@@ -31,7 +31,7 @@ const TRANSPARENT = "#00000000";
 // La fecha va debajo de la hora y centrada con ella. Kino pone los dos elementos en fila, así que a la fecha se le da un
 // desplazamiento: SHIFT_X dp a la derecha (hasta quedar bajo la hora) y DROP_Y dp hacia abajo. Valores para el tamaño "normal";
 // crecen con el tamaño. Ajústalos viendo la TV: si la fecha queda corrida a la izquierda, sube SHIFT_X; si a la derecha, bájalo.
-const SHIFT_X = 112;
+const SHIFT_X = 93;
 const DROP_Y = 22;
 const SCALE = { small: 0.75, normal: 1, large: 1.25, xlarge: 1.5 };
 
