@@ -31,9 +31,6 @@ const TRANSPARENT = "#00000000";
 
 // Tamaños de Kino, de menor a mayor. La fecha usa siempre un escalón menos que la hora (con "small" no hay más abajo).
 const SIZES = ["small", "normal", "large", "xlarge"];
-// Proporción aproximada de cada tamaño, solo para estimar el centrado (ajústala si en la TV se ve corrido).
-const SCALE = { small: 0.75, normal: 1, large: 1.25, xlarge: 1.5 };
-const NBSP = "\u00A0";
 
 const setting = (key) => {
   try {
@@ -43,21 +40,7 @@ const setting = (key) => {
   }
 };
 
-/** Ancho aproximado de un texto en "dígitos": espacios y dos puntos valen la mitad. */
-const width = (s) => [...s].reduce((a, c) => a + (c === " " || c === ":" ? 0.5 : 1), 0);
-
-/**
- * Centra la hora sobre la fecha. Los elementos se pegan al borde derecho, así que a la hora le agregamos espacios fijos
- * al final: la corren hacia la izquierda justo la mitad de lo que la fecha es más ancha.
- */
-function centered(time, date, timeSize, dateSize) {
-  const St = SCALE[timeSize];
-  const Sd = SCALE[dateSize];
-  const n = Math.max(0, Math.round((width(date) * Sd - width(time) * St) / St));
-  return time + NBSP.repeat(n);
-}
-
-/** La respuesta del slot: dos elementos, hora y fecha, y cuándo volver a preguntar (un minuto es lo máximo que permite Kino). */
+/** La respuesta del slot: dos elementos, la fecha primero y la hora después, y cuándo volver a preguntar (un minuto es lo máximo que permite Kino). */
 export async function playerSlot(context) {
   const { time, date } = clockParts(new Date(), context && context.lang);
 
@@ -65,7 +48,7 @@ export async function playerSlot(context) {
   const timeSize = SIZES.includes(chosen) ? chosen : "normal";
   const dateSize = SIZES[Math.max(0, SIZES.indexOf(timeSize) - 1)];
 
-  const clock = { id: "clock", text: centered(time, date, timeSize, dateSize), background: TRANSPARENT };
+  const clock = { id: "clock", text: time, background: TRANSPARENT };
   const day = { id: "date", text: date, background: TRANSPARENT };
 
   if (timeSize !== "normal") clock.size = timeSize;
@@ -77,7 +60,7 @@ export async function playerSlot(context) {
     day.color = color;
   }
 
-  return { items: [clock, day], refreshMs: 60000 };
+  return { items: [day, clock], refreshMs: 60000 };
 }
 
 /** El slot no tiene botones, así que Kino nunca llama esto; la capacidad igual exige la exportación. */
