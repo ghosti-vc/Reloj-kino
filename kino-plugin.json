@@ -17,12 +17,12 @@
   "slot": {
     "elements": [
       {
-        "id": "clock",
+        "id": "date",
         "kind": "text",
         "mode": "overlay"
       },
       {
-        "id": "date",
+        "id": "clock",
         "kind": "text",
         "mode": "overlay"
       }
