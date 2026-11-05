@@ -28,6 +28,8 @@ function clockParts(now, lang) {
 
 const COLORS = { white: "#FFFFFF", yellow: "#FFD54F", cyan: "#4DD0E1", green: "#81C784", orange: "#FFB74D", pink: "#F48FB1", black: "#000000" };
 const TRANSPARENT = "#00000000";
+// Cuánto se acerca la fecha a la hora, en dp (el hueco entre los dos elementos lo pone Kino). Súbelo para juntarlos más.
+const CLOSER = 30;
 
 // Tamaños de Kino, de menor a mayor. La fecha usa siempre un escalón menos que la hora (con "small" no hay más abajo).
 const SIZES = ["small", "normal", "large", "xlarge"];
@@ -49,7 +51,7 @@ export async function playerSlot(context) {
   const dateSize = SIZES[Math.max(0, SIZES.indexOf(timeSize) - 1)];
 
   const clock = { id: "clock", text: time, background: TRANSPARENT };
-  const day = { id: "date", text: date, background: TRANSPARENT };
+  const day = { id: "date", text: date, background: TRANSPARENT, left: CLOSER };
 
   if (timeSize !== "normal") clock.size = timeSize;
   if (dateSize !== "normal") day.size = dateSize;
