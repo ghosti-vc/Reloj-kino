@@ -4,7 +4,7 @@
   "version": "0.9.60",
   "apiVersion": 23,
   "entry": "plugin.js",
-  "description": "Ve el reloj en la esquina superior derecha del reproductor en la TV",
+  "description": "Ve el reloj en la esquina superior derecha del reproductor en la TV cada que veas canales en vivo, pelicuals o series sin interrumpir la reproduccion",
   "author": "ghosti-vc",
   "homepage": "https://kinotvapp.github.io/kino-plugins/",
   "discoverable": true,
