@@ -29,7 +29,7 @@ function clockParts(now, lang) {
 // Ancho aproximado de cada carácter (en em) para centrar la hora sobre la fecha con espacios fijos.
 const EM = { ":": 0.26, " ": 0.25, i: 0.24, j: 0.24, l: 0.24, t: 0.33, f: 0.33, r: 0.34, m: 0.85, w: 0.75 };
 const width = (s) => [...s].reduce((a, c) => a + (EM[c] !== undefined ? EM[c] : 0.55), 0);
-const NBSP = " ";
+const NBSP = " ";
 
 /** La hora con espacios fijos al inicio para que quede centrada sobre la fecha (si la fecha es más ancha). */
 function centered(time, date) {
@@ -65,5 +65,38 @@ export async function playerSlot(context) {
 
 /** El slot no tiene botones, así que Kino nunca llama esto; la capacidad igual exige la exportación. */
 export async function playerSlotAction() {
+  return null;
+}
+
+// ===== Pantalla del menú (nuevo) =====
+
+export async function screen({ state }) {
+  const now = state && typeof state.now === "number" ? state.now : Date.now();
+  const p = clockParts(new Date(now), kino.lang);
+  return {
+    type: "SingleChildScrollView",
+    every: [{ ms: 1000, event: "tick" }],
+    children: [
+      {
+        type: "Column",
+        key: "clock",
+        gap: 4,
+        padding: { compact: 16, expanded: 24 },
+        minHeight: { compact: 340, expanded: 400 },
+        crossAxisAlignment: "center",
+        mainAxisAlignment: "center",
+        children: [
+          { type: "Text", key: "time", text: p.time, style: "h1", bold: true, textAlign: "center", fill: true },
+          { type: "Text", text: p.date, style: "caption", color: "muted", textAlign: "center", fill: true },
+        ],
+      },
+    ],
+  };
+}
+
+export async function screenEvent({ name }) {
+  if (name === "open" || name === "tick") {
+    return { state: { now: Date.now() } };
+  }
   return null;
 }
