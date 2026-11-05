@@ -32,6 +32,8 @@ const TRANSPARENT = "#00000000";
 // desplazamiento: SHIFT_X dp a la derecha (hasta quedar bajo la hora) y DROP_Y dp hacia abajo. Valores para el tamaño "normal";
 // crecen con el tamaño. Ajústalos viendo la TV: si la fecha queda corrida a la izquierda, sube SHIFT_X; si a la derecha, bájalo.
 const SHIFT_X = 93;
+// Margen hacia la izquierda para hora y fecha juntas: la fecha es más ancha que la hora y, sin esto, se sale del borde y se recorta.
+const EDGE = 12;
 const DROP_Y = 22;
 const SCALE = { small: 0.75, normal: 1, large: 1.25, xlarge: 1.5 };
 
@@ -56,7 +58,8 @@ export async function playerSlot(context) {
 
   const clock = { id: "clock", text: time, background: TRANSPARENT };
   const k = SCALE[timeSize];
-  const day = { id: "date", text: date, background: TRANSPARENT, left: Math.round(SHIFT_X * k), top: Math.round(DROP_Y * k) };
+  const day = { id: "date", text: date, background: TRANSPARENT, left: Math.round((SHIFT_X - EDGE) * k), top: Math.round(DROP_Y * k) };
+  clock.left = -Math.round(EDGE * k);
 
   if (timeSize !== "normal") clock.size = timeSize;
   if (dateSize !== "normal") day.size = dateSize;
