@@ -1,6 +1,6 @@
-// Reloj del reproductor: la hora arriba y la fecha debajo, en dos elementos (uno más pequeño que el otro).
-// Siempre usa la hora del aparato, con fondo transparente. Solo se ajustan el tamaño y el color de la letra.
-// Sin red y sin botones.
+// Reloj del reproductor (versión de una sola pieza): la hora arriba y la fecha debajo, en dos líneas de un mismo elemento.
+// Sin desplazamientos, para que Kino lo dibuje completo desde el primer instante. Fondo transparente.
+// Solo se ajustan el tamaño y el color de la letra. Siempre usa la hora del aparato. Sin red y sin botones.
 
 const DAYS = { es: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"], en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] };
 const MONTHS = {
@@ -15,7 +15,7 @@ function langOf(lang) {
   return typeof lang === "string" && lang.toLowerCase().startsWith("en") ? "en" : "es";
 }
 
-/** La hora "HH:mm" y la fecha ("mar 4 nov" en español, "Tue Nov 4" en inglés) del instante [now] en el reloj del aparato. */
+/** La hora "HH:mm" y la fecha ("jue 5 nov" en español, "Thu Nov 5" en inglés) del instante [now] en el reloj del aparato. */
 function clockParts(now, lang) {
   const l = langOf(lang);
   const time = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
@@ -26,18 +26,19 @@ function clockParts(now, lang) {
   return { time, date };
 }
 
+// Ancho aproximado de cada carácter (en em) para centrar la hora sobre la fecha con espacios fijos.
+const EM = { ":": 0.26, " ": 0.25, i: 0.24, j: 0.24, l: 0.24, t: 0.33, f: 0.33, r: 0.34, m: 0.85, w: 0.75 };
+const width = (s) => [...s].reduce((a, c) => a + (EM[c] !== undefined ? EM[c] : 0.55), 0);
+const NBSP = " ";
+
+/** La hora con espacios fijos al inicio para que quede centrada sobre la fecha (si la fecha es más ancha). */
+function centered(time, date) {
+  const n = Math.max(0, Math.round((width(date) - width(time)) / 2 / EM[" "]));
+  return NBSP.repeat(n) + time;
+}
+
 const COLORS = { white: "#FFFFFF", yellow: "#FFD54F", cyan: "#4DD0E1", green: "#81C784", orange: "#FFB74D", pink: "#F48FB1", black: "#000000" };
 const TRANSPARENT = "#00000000";
-// La fecha va debajo de la hora y centrada con ella. Kino pone los dos elementos en fila, así que a la fecha se le da un
-// desplazamiento: SHIFT_X dp a la derecha (hasta quedar bajo la hora) y DROP_Y dp hacia abajo. Valores para el tamaño "normal";
-// crecen con el tamaño. Ajústalos viendo la TV: si la fecha queda corrida a la izquierda, sube SHIFT_X; si a la derecha, bájalo.
-const SHIFT_X = 93;
-// Margen hacia la izquierda para hora y fecha juntas: la fecha es más ancha que la hora y, sin esto, se sale del borde y se recorta.
-const EDGE = 12;
-const DROP_Y = 22;
-const SCALE = { small: 0.75, normal: 1, large: 1.25, xlarge: 1.5 };
-
-// Tamaños de Kino, de menor a mayor. La fecha usa siempre un escalón menos que la hora (con "small" no hay más abajo).
 const SIZES = ["small", "normal", "large", "xlarge"];
 
 const setting = (key) => {
@@ -48,29 +49,18 @@ const setting = (key) => {
   }
 };
 
-/** La respuesta del slot: dos elementos, la fecha primero y la hora después, y cuándo volver a preguntar (un minuto es lo máximo que permite Kino). */
+/** La respuesta del slot: un solo elemento con la hora y la fecha, y cuándo volver a preguntar (un minuto es lo máximo que permite Kino). */
 export async function playerSlot(context) {
   const { time, date } = clockParts(new Date(), context && context.lang);
+  const item = { id: "clock", text: `${centered(time, date)}\n${date}`, background: TRANSPARENT };
 
-  const chosen = setting("size");
-  const timeSize = SIZES.includes(chosen) ? chosen : "normal";
-  const dateSize = SIZES[Math.max(0, SIZES.indexOf(timeSize) - 1)];
-
-  const clock = { id: "clock", text: time, background: TRANSPARENT };
-  const k = SCALE[timeSize];
-  const day = { id: "date", text: date, background: TRANSPARENT, left: Math.round((SHIFT_X - EDGE) * k), top: Math.round(DROP_Y * k) };
-  clock.left = -Math.round(EDGE * k);
-
-  if (timeSize !== "normal") clock.size = timeSize;
-  if (dateSize !== "normal") day.size = dateSize;
+  const size = setting("size");
+  if (SIZES.includes(size) && size !== "normal") item.size = size;
 
   const color = COLORS[setting("color")];
-  if (color) {
-    clock.color = color;
-    day.color = color;
-  }
+  if (color) item.color = color;
 
-  return { items: [day, clock], refreshMs: 60000 };
+  return { items: [item], refreshMs: 60000 };
 }
 
 /** El slot no tiene botones, así que Kino nunca llama esto; la capacidad igual exige la exportación. */
