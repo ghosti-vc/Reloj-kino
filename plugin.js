@@ -28,8 +28,12 @@ function clockParts(now, lang) {
 
 const COLORS = { white: "#FFFFFF", yellow: "#FFD54F", cyan: "#4DD0E1", green: "#81C784", orange: "#FFB74D", pink: "#F48FB1", black: "#000000" };
 const TRANSPARENT = "#00000000";
-// Cuánto se acerca la fecha a la hora, en dp (el hueco entre los dos elementos lo pone Kino). Súbelo para juntarlos más.
-const CLOSER = 30;
+// La fecha va debajo de la hora y centrada con ella. Kino pone los dos elementos en fila, así que a la fecha se le da un
+// desplazamiento: SHIFT_X dp a la derecha (hasta quedar bajo la hora) y DROP_Y dp hacia abajo. Valores para el tamaño "normal";
+// crecen con el tamaño. Ajústalos viendo la TV: si la fecha queda corrida a la izquierda, sube SHIFT_X; si a la derecha, bájalo.
+const SHIFT_X = 112;
+const DROP_Y = 22;
+const SCALE = { small: 0.75, normal: 1, large: 1.25, xlarge: 1.5 };
 
 // Tamaños de Kino, de menor a mayor. La fecha usa siempre un escalón menos que la hora (con "small" no hay más abajo).
 const SIZES = ["small", "normal", "large", "xlarge"];
@@ -51,7 +55,8 @@ export async function playerSlot(context) {
   const dateSize = SIZES[Math.max(0, SIZES.indexOf(timeSize) - 1)];
 
   const clock = { id: "clock", text: time, background: TRANSPARENT };
-  const day = { id: "date", text: date, background: TRANSPARENT, left: CLOSER };
+  const k = SCALE[timeSize];
+  const day = { id: "date", text: date, background: TRANSPARENT, left: Math.round(SHIFT_X * k), top: Math.round(DROP_Y * k) };
 
   if (timeSize !== "normal") clock.size = timeSize;
   if (dateSize !== "normal") day.size = dateSize;
