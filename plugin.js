@@ -17,9 +17,12 @@ function langOf(lang) {
 }
 
 /** La hora "HH:mm" y la fecha ("jue 5 nov" en español, "Thu Nov 5" en inglés) del instante [now] en el reloj del aparato. */
-function clockParts(now, lang) {
+function clockParts(now, lang, hour12) {
   const l = langOf(lang);
-  const time = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  const h = now.getHours();
+  const time = hour12
+    ? `${h % 12 || 12}:${pad(now.getMinutes())} ${h < 12 ? "AM" : "PM"}`
+    : `${pad(h)}:${pad(now.getMinutes())}`;
   const day = DAYS[l][now.getDay()];
   const month = MONTHS[l][now.getMonth()];
   const d = now.getDate();
@@ -52,7 +55,7 @@ const setting = (key) => {
 
 /** La respuesta del slot: un solo elemento con la hora y la fecha, y cuándo volver a preguntar (un minuto es lo máximo que permite Kino). */
 export async function playerSlot(context) {
-  const { time, date } = clockParts(new Date(), context && context.lang);
+  const { time, date } = clockParts(new Date(), context && context.lang, setting("format") === "12");
   // Cada apartado tiene su ajuste: "fixed" (siempre visible, elemento "clock-fixed") u "hide" (solo con los controles, elemento "clock").
   // Si el ajuste falta: TV en vivo queda fijo y series y películas con los controles.
   const live = !!(context && context.live === true);
@@ -78,7 +81,7 @@ export async function playerSlotAction() {
 
 export async function screen({ state }) {
   const now = state && typeof state.now === "number" ? state.now : Date.now();
-  const p = clockParts(new Date(now), kino.lang);
+  const p = clockParts(new Date(now), kino.lang, setting("format") === "12");
   return {
     type: "SingleChildScrollView",
     every: [{ ms: 1000, event: "tick" }],
