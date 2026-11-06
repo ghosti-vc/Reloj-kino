@@ -1,7 +1,7 @@
 {
   "id": "reloj-kino",
   "name": "reloj-kino",
-  "version": "0.9.62",
+  "version": "0.9.80",
   "apiVersion": 23,
   "entry": "plugin.js",
   "description": "Ve el reloj en la esquina superior derecha del reproductor en la TV cada que veas canales en vivo, pelicuals o series sin interrumpir la reproduccion. En el inicio se puede ver al presionar el simbolo de reloj e. la pantallade ajustes (plugins)",
