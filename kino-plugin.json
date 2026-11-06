@@ -4,7 +4,7 @@
   "version": "0.9.100",
   "apiVersion": 23,
   "entry": "plugin.js",
-  "description": "Ve el reloj en la esquina superior derecha del reproductor en la TV cada que veas canales en vivo, pelicuals o series sin interrumpir la reproduccion. Se pueden realizar ajustes de formato de hora(24y12hoeas, tamaño y color de letra de igualando si el reloj será visible o no visible en tv en vivo y reproductor individualmenete . En el inicio se puede ver al presionar el simbolo de reloj e. la pantallade ajustes (plugins)",
+  "description": "Ve el reloj en la esquina superior derecha del reproductor en la TV cada que veas canales en vivo, pelicuals o series sin interrumpir la reproduccion. Se pueden realizar ajustes de formato de hora(24y12hras, tamaño y color de letra de igual manera si el reloj será visible o no visible en tv en vivo y reproductor individualmenete . En el inicio se puede ver al presionar el simbolo de reloj e. la pantallade ajustes (plugins)",
   "author": "ghosti-vc",
   "homepage": "https://kinotvapp.github.io/kino-plugins/",
   "discoverable": true,
