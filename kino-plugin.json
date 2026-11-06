@@ -1,7 +1,7 @@
 {
   "id": "reloj-kino",
   "name": "Reloj",
-  "version": "0.9.98",
+  "version": "0.9.99",
   "apiVersion": 23,
   "entry": "plugin.js",
   "description": "Ve el reloj en la esquina superior derecha del reproductor en la TV cada que veas canales en vivo, pelicuals o series sin interrumpir la reproduccion. En el inicio se puede ver al presionar el simbolo de reloj e. la pantallade ajustes (plugins)",
@@ -36,6 +36,17 @@
     ]
   },
   "settings": [
+    {
+      "key": "format",
+      "label": "Formato de hora",
+      "labelEn": "Time format",
+      "type": "select",
+      "default": "24",
+      "options": [
+        { "value": "24", "label": "24 horas (por defecto)", "labelEn": "24-hour (default)" },
+        { "value": "12", "label": "12 horas (AM/PM)", "labelEn": "12-hour (AM/PM)" }
+      ]
+    },
     {
       "key": "secLive",
       "label": "TV en vivo",
@@ -87,17 +98,6 @@
         { "value": "normal", "label": "Normal (por defecto)", "labelEn": "Normal (default)" },
         { "value": "large", "label": "Grande", "labelEn": "Large" },
         { "value": "xlarge", "label": "Muy grande", "labelEn": "Extra large" }
-      ]
-    },
-    {
-      "key": "format",
-      "label": "Formato de hora",
-      "labelEn": "Time format",
-      "type": "select",
-      "default": "24",
-      "options": [
-        { "value": "24", "label": "24 horas (por defecto)", "labelEn": "24-hour (default)" },
-        { "value": "12", "label": "12 horas (AM/PM)", "labelEn": "12-hour (AM/PM)" }
       ]
     },
     {
