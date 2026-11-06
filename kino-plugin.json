@@ -1,7 +1,7 @@
 {
   "id": "reloj-kino",
   "name": "reloj-kino",
-  "version": "0.9.66",
+  "version": "0.9.62",
   "apiVersion": 23,
   "entry": "plugin.js",
   "description": "Ve el reloj en la esquina superior derecha del reproductor en la TV cada que veas canales en vivo, pelicuals o series sin interrumpir la reproduccion. En el inicio se puede ver al presionar el simbolo de reloj e. la pantallade ajustes (plugins)",
@@ -29,13 +29,47 @@
         "mode": "overlay"
       },
       {
-        "id": "clock-live",
+        "id": "clock-fixed",
         "kind": "text",
         "mode": "fixed"
       }
     ]
   },
   "settings": [
+    {
+      "key": "secLive",
+      "label": "TV en vivo",
+      "labelEn": "Live TV",
+      "type": "section"
+    },
+    {
+      "key": "liveMode",
+      "label": "Reloj en TV en vivo",
+      "labelEn": "Clock on live TV",
+      "type": "select",
+      "default": "fixed",
+      "options": [
+        { "value": "fixed", "label": "Siempre visible (por defecto)", "labelEn": "Always visible (default)" },
+        { "value": "hide", "label": "Ocultar reloj", "labelEn": "Hide clock" }
+      ]
+    },
+    {
+      "key": "secVod",
+      "label": "Series y películas",
+      "labelEn": "Series and movies",
+      "type": "section"
+    },
+    {
+      "key": "vodMode",
+      "label": "Reloj en series y películas",
+      "labelEn": "Clock on series and movies",
+      "type": "select",
+      "default": "hide",
+      "options": [
+        { "value": "fixed", "label": "Siempre visible", "labelEn": "Always visible" },
+        { "value": "hide", "label": "Ocultar reloj (por defecto)", "labelEn": "Hide clock (default)" }
+      ]
+    },
     {
       "key": "secLook",
       "label": "Aspecto",
@@ -74,4 +108,3 @@
     }
   ]
 }
- 
