@@ -1,7 +1,7 @@
 // Reloj del reproductor (versión de una sola pieza): la hora arriba y la fecha debajo, en dos líneas de un mismo elemento.
 // Sin desplazamientos, para que Kino lo dibuje completo desde el primer instante. Fondo transparente.
 // Solo se ajustan el tamaño y el color de la letra. Siempre usa la hora del aparato. Sin red y sin botones.
-// En TV en vivo usa el elemento "clock-live" (fijo, siempre visible); en películas y series, "clock" (con los controles).
+// La persona elige por separado, en TV en vivo y en series y películas, si el reloj va siempre visible ("clock-fixed") o solo con los controles ("clock").
 
 const DAYS = { es: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"], en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] };
 const MONTHS = {
@@ -53,9 +53,12 @@ const setting = (key) => {
 /** La respuesta del slot: un solo elemento con la hora y la fecha, y cuándo volver a preguntar (un minuto es lo máximo que permite Kino). */
 export async function playerSlot(context) {
   const { time, date } = clockParts(new Date(), context && context.lang);
-  // En TV en vivo se responde el elemento fijo; en películas y series, el que sale con los controles.
+  // Cada apartado tiene su ajuste: "fixed" (siempre visible, elemento "clock-fixed") u "hide" (solo con los controles, elemento "clock").
+  // Si el ajuste falta: TV en vivo queda fijo y series y películas con los controles.
   const live = !!(context && context.live === true);
-  const item = { id: live ? "clock-live" : "clock", text: `${centered(time, date)}\n${date}`, background: TRANSPARENT };
+  const mode = setting(live ? "liveMode" : "vodMode");
+  const fixed = mode === "fixed" || mode === "hide" ? mode === "fixed" : live;
+  const item = { id: fixed ? "clock-fixed" : "clock", text: `${centered(time, date)}\n${date}`, background: TRANSPARENT };
 
   const size = setting("size");
   if (SIZES.includes(size) && size !== "normal") item.size = size;
@@ -103,4 +106,3 @@ export async function screenEvent({ name }) {
   }
   return null;
 }
- 
