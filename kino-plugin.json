@@ -1,64 +1,121 @@
 {
-  "id": "theme-jack-bw",
-  "name": "Tema Jack",
-  "version": "1.4.0",
-  "apiVersion": 18,
+  "id": "reloj-kino",
+  "name": "Reloj",
+  "version": "0.9.99",
+  "apiVersion": 23,
   "entry": "plugin.js",
-  "description": "Tema blanco y negro donde la «o» de Kino es la cara de Jack",
-  "hosts": [],
-  "categories": ["themes"],
-  "appThemes": [
-    {
-      "id": "jack-bw",
-      "name": { "es": "Tema Jack", "en": "Jack Theme" },
-      "experience": "full",
-      "colors": {
-        "accent": "#FFFFFF",
-        "onAccent": "#000000",
-        "background": "#000000",
-        "surface": "#1C1C1C",
-        "surfaceHigh": "#2E2E2E",
-        "railPanel": "#1C1C1C",
-        "textPrimary": "#FFFFFF",
-        "textSecondary": "#B3B3B3",
-        "focus": "#FFFFFF",
-        "onFocus": "#000000",
-        "border": "#FFFFFF"
+  "description": "Ve el reloj en la esquina superior derecha del reproductor en la TV cada que veas canales en vivo, pelicuals o series sin interrumpir la reproduccion. En el inicio se puede ver al presionar el simbolo de reloj e. la pantallade ajustes (plugins)",
+  "author": "ghosti-vc",
+  "homepage": "https://kinotvapp.github.io/kino-plugins/",
+  "discoverable": true,
+  "hosts": [
+    "kinotvapp.github.io"
+  ],
+  "capabilities": [
+    "playerSlot",
+    "screen"
+  ],
+  "screen": {
+    "label": "Reloj",
+    "labelEn": "Clock",
+    "icon": "schedule",
+    "menuOpens": "screen"
+  },
+  "slot": {
+    "elements": [
+      {
+        "id": "clock",
+        "kind": "text",
+        "mode": "overlay"
       },
-      "background": { "type": "gradient", "colors": ["#000000", "#232323", "#000000"], "angle": 135 },
-      "shape": {
-        "cardRadius": 16,
-        "channelRadius": 16,
-        "buttonRadius": 20,
-        "chipRadius": 16,
-        "dialogRadius": 20,
-        "inputRadius": 12,
-        "cardBorder": 2,
-        "headerBorder": 1,
-        "panelBorder": 1,
-        "menuBorder": 1,
-        "dialogBorder": 2
-      },
-      "elevation": { "cardShadow": 1, "dialogShadow": 1 },
-      "motion": { "focusZoom": 1.08, "crossfadeMs": 400, "heroDrift": "on" },
-      "typography": { "scale": 1.05, "titleScale": 1.05, "bodyScale": 1.0 },
-      "logo": {
-        "decor": {
-          "paths": [
-            { "d": "M-100 0 A100 100 0 1 0 100 0 A100 100 0 1 0 -100 0 Z", "fill": "#F5F5F5" },
-            { "d": "M-57 -15 A22 30 0 1 0 -13 -15 A22 30 0 1 0 -57 -15 Z M13 -15 A22 30 0 1 0 57 -15 A22 30 0 1 0 13 -15 Z", "fill": "#0E0E0E" },
-            { "d": "M0 22 L9 40 H-9 Z", "fill": "#0E0E0E" },
-            { "d": "M-55 52 C-30 82 30 82 55 52 C30 72 -30 72 -55 52 Z", "fill": "#0E0E0E" },
-            { "d": "M-33 58 H-29 V76 H-33 Z M-11 66 H-7 V82 H-11 Z M7 66 H11 V82 H7 Z M29 58 H33 V76 H29 Z", "fill": "#0E0E0E" }
-          ]
-        }
-      },
-      "adjustable": {
-        "colors.accent": { "swatches": ["#FFFFFF", "#FF6A00", "#D9D9D9", "#A6A6A6"] },
-        "shape.cardRadius": { "min": 0, "max": 32 },
-        "typography.scale": { "min": 1.0, "max": 1.2 },
-        "background": true
+      {
+        "id": "clock-fixed",
+        "kind": "text",
+        "mode": "fixed"
       }
+    ]
+  },
+  "settings": [
+    {
+      "key": "format",
+      "label": "Formato de hora",
+      "labelEn": "Time format",
+      "type": "select",
+      "default": "24",
+      "options": [
+        { "value": "24", "label": "24 horas (por defecto)", "labelEn": "24-hour (default)" },
+        { "value": "12", "label": "12 horas (AM/PM)", "labelEn": "12-hour (AM/PM)" }
+      ]
+    },
+    {
+      "key": "secLive",
+      "label": "TV en vivo",
+      "labelEn": "Live TV",
+      "type": "section"
+    },
+    {
+      "key": "liveMode",
+      "label": "Reloj en TV en vivo",
+      "labelEn": "Clock on live TV",
+      "type": "select",
+      "default": "fixed",
+      "options": [
+        { "value": "fixed", "label": "Siempre visible (por defecto)", "labelEn": "Always visible (default)" },
+        { "value": "hide", "label": "Ocultar reloj", "labelEn": "Hide clock" }
+      ]
+    },
+    {
+      "key": "secVod",
+      "label": "Series y películas",
+      "labelEn": "Series and movies",
+      "type": "section"
+    },
+    {
+      "key": "vodMode",
+      "label": "Reloj en series y películas",
+      "labelEn": "Clock on series and movies",
+      "type": "select",
+      "default": "hide",
+      "options": [
+        { "value": "fixed", "label": "Siempre visible", "labelEn": "Always visible" },
+        { "value": "hide", "label": "Ocultar reloj (por defecto)", "labelEn": "Hide clock (default)" }
+      ]
+    },
+    {
+      "key": "secLook",
+      "label": "Aspecto",
+      "labelEn": "Look",
+      "type": "section"
+    },
+    {
+      "key": "size",
+      "label": "Tamaño del texto",
+      "labelEn": "Text size",
+      "type": "select",
+      "default": "normal",
+      "options": [
+        { "value": "small", "label": "Pequeño", "labelEn": "Small" },
+        { "value": "normal", "label": "Normal (por defecto)", "labelEn": "Normal (default)" },
+        { "value": "large", "label": "Grande", "labelEn": "Large" },
+        { "value": "xlarge", "label": "Muy grande", "labelEn": "Extra large" }
+      ]
+    },
+    {
+      "key": "color",
+      "label": "Color de la letra",
+      "labelEn": "Letter colour",
+      "type": "select",
+      "default": "auto",
+      "options": [
+        { "value": "auto", "label": "Blanco de Kino (por defecto)", "labelEn": "Kino white (default)" },
+        { "value": "white", "label": "Blanco", "labelEn": "White" },
+        { "value": "yellow", "label": "Amarillo", "labelEn": "Yellow" },
+        { "value": "cyan", "label": "Cian", "labelEn": "Cyan" },
+        { "value": "green", "label": "Verde", "labelEn": "Green" },
+        { "value": "orange", "label": "Naranja", "labelEn": "Orange" },
+        { "value": "pink", "label": "Rosa", "labelEn": "Pink" },
+        { "value": "black", "label": "Negro", "labelEn": "Black" }
+      ]
     }
   ]
 }
