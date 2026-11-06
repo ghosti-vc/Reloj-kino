@@ -1,6 +1,7 @@
 // Reloj del reproductor (versión de una sola pieza): la hora arriba y la fecha debajo, en dos líneas de un mismo elemento.
 // Sin desplazamientos, para que Kino lo dibuje completo desde el primer instante. Fondo transparente.
 // Solo se ajustan el tamaño y el color de la letra. Siempre usa la hora del aparato. Sin red y sin botones.
+// En TV en vivo usa el elemento "clock-live" (fijo, siempre visible); en películas y series, "clock" (con los controles).
 
 const DAYS = { es: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"], en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] };
 const MONTHS = {
@@ -29,7 +30,7 @@ function clockParts(now, lang) {
 // Ancho aproximado de cada carácter (en em) para centrar la hora sobre la fecha con espacios fijos.
 const EM = { ":": 0.26, " ": 0.25, i: 0.24, j: 0.24, l: 0.24, t: 0.33, f: 0.33, r: 0.34, m: 0.85, w: 0.75 };
 const width = (s) => [...s].reduce((a, c) => a + (EM[c] !== undefined ? EM[c] : 0.55), 0);
-const NBSP = " ";
+const NBSP = "\u00A0";
 
 /** La hora con espacios fijos al inicio para que quede centrada sobre la fecha (si la fecha es más ancha). */
 function centered(time, date) {
@@ -52,7 +53,9 @@ const setting = (key) => {
 /** La respuesta del slot: un solo elemento con la hora y la fecha, y cuándo volver a preguntar (un minuto es lo máximo que permite Kino). */
 export async function playerSlot(context) {
   const { time, date } = clockParts(new Date(), context && context.lang);
-  const item = { id: "clock", text: `${centered(time, date)}\n${date}`, background: TRANSPARENT };
+  // En TV en vivo se responde el elemento fijo; en películas y series, el que sale con los controles.
+  const live = !!(context && context.live === true);
+  const item = { id: live ? "clock-live" : "clock", text: `${centered(time, date)}\n${date}`, background: TRANSPARENT };
 
   const size = setting("size");
   if (SIZES.includes(size) && size !== "normal") item.size = size;
