@@ -2,6 +2,11 @@
 // Sin desplazamientos, para que Kino lo dibuje completo desde el primer instante. Fondo transparente.
 // Solo se ajustan el tamaño y el color de la letra. Siempre usa la hora del aparato. Sin red y sin botones.
 // La persona elige por separado, en TV en vivo y en series y películas, si el reloj va siempre visible ("clock-fixed") o solo con los controles ("clock").
+// En series y películas, además, puede activar "Termina a las 22:40" (apagado por defecto), siempre visible o solo con los controles,
+// aparte del reloj.
+//
+// Kino deja como máximo 3 elementos por plugin: "ends" (con los controles), "clock" (con los controles) y "clock-fixed" (fijo).
+// Cuando el reloj y "Termina a las" van los dos fijos, comparten "clock-fixed": la segunda línea muestra "Termina a las…" en lugar de la fecha.
 
 const DAYS = { es: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"], en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] };
 const MONTHS = {
@@ -53,23 +58,57 @@ const setting = (key) => {
   }
 };
 
-/** La respuesta del slot: un solo elemento con la hora y la fecha, y cuándo volver a preguntar (un minuto es lo máximo que permite Kino). */
+/**
+ * "Termina a las 22:40": la hora a la que acaba lo que suena, contando lo que falta (duración menos posición) y la velocidad.
+ * Es null cuando Kino no da la duración: en vivo, el contexto mínimo (títulos privados o que no son de ningún plugin) o un reproductor que no la sabe.
+ */
+function endsText(context, hour12) {
+  if (!context || context.live === true) return null;
+  const pos = context.positionMs;
+  const dur = context.durationMs;
+  if (typeof pos !== "number" || typeof dur !== "number" || !Number.isFinite(pos) || !Number.isFinite(dur) || dur <= 0 || pos < 0) return null;
+  const speed = context.player && typeof context.player.speed === "number" && context.player.speed > 0 ? context.player.speed : 1;
+  const { time } = clockParts(new Date(Date.now() + Math.max(0, dur - pos) / speed), context.lang, hour12);
+  return langOf(context.lang) === "en" ? `Ends at ${time}` : `Termina a las ${time}`;
+}
+
+/** La respuesta del slot: el reloj, y "Termina a las" si la persona lo activó; y cuándo volver a preguntar (un minuto es lo máximo que permite Kino). */
 export async function playerSlot(context) {
-  const { time, date } = clockParts(new Date(), context && context.lang, setting("format") === "12");
+  const hour12 = setting("format") === "12";
+  const { time, date } = clockParts(new Date(), context && context.lang, hour12);
   // Cada apartado tiene su ajuste: "fixed" (siempre visible, elemento "clock-fixed") u "hide" (solo con los controles, elemento "clock").
   // Si el ajuste falta: TV en vivo queda fijo y series y películas con los controles.
   const live = !!(context && context.live === true);
   const mode = setting(live ? "liveMode" : "vodMode");
   const fixed = mode === "fixed" || mode === "hide" ? mode === "fixed" : live;
-  const item = { id: fixed ? "clock-fixed" : "clock", text: `${centered(time, date)}\n${date}`, background: TRANSPARENT };
 
   const size = setting("size");
-  if (SIZES.includes(size) && size !== "normal") item.size = size;
-
   const color = COLORS[setting("color")];
-  if (color) item.color = color;
+  const dress = (it) => {
+    it.background = TRANSPARENT;
+    if (SIZES.includes(size) && size !== "normal") it.size = size;
+    if (color) it.color = color;
+    return it;
+  };
 
-  return { items: [item], refreshMs: 60000 };
+  // "Termina a las": desactivado por defecto; "fixed" (siempre visible) u "hide" (solo con los controles).
+  const endsMode = setting("endsAt");
+  const ends = endsMode === "fixed" || endsMode === "hide" ? endsText(context, hour12) : null;
+  const endsFixed = endsMode === "fixed";
+
+  const items = [];
+  if (ends && endsFixed && fixed) {
+    // Reloj y "Termina a las" fijos a la vez: comparten el único elemento fijo; la segunda línea es "Termina a las…" en lugar de la fecha.
+    items.push(dress({ id: "clock-fixed", text: `${centered(time, ends)}\n${ends}` }));
+  } else {
+    items.push(dress({ id: fixed ? "clock-fixed" : "clock", text: `${centered(time, date)}\n${date}` }));
+    if (ends) {
+      // Con los controles: el elemento "ends". Fijo (con el reloj solo con controles): el elemento fijo, que el reloj no usa.
+      items.push(dress({ id: endsFixed ? "clock-fixed" : "ends", text: ends }));
+    }
+  }
+
+  return { items, refreshMs: 60000 };
 }
 
 /** El slot no tiene botones, así que Kino nunca llama esto; la capacidad igual exige la exportación. */
