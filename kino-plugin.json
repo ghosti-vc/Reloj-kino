@@ -1,7 +1,7 @@
 {
   "id": "reloj-kino",
   "name": "Reloj",
-  "version": "0.9.120",
+  "version": "0.9.130",
   "apiVersion": 23,
   "entry": "plugin.js",
   "description": "Ve el reloj en la esquina superior derecha del reproductor en la TV cada que veas canales en vivo, pelicuals o series sin interrumpir la reproduccion. En el inicio se puede ver al presionar el simbolo de reloj e. la pantallade ajustes (plugins)",
@@ -24,6 +24,11 @@
   "slot": {
     "elements": [
       {
+        "id": "ends",
+        "kind": "text",
+        "mode": "overlay"
+      },
+      {
         "id": "clock",
         "kind": "text",
         "mode": "overlay"
@@ -43,8 +48,16 @@
       "type": "select",
       "default": "24",
       "options": [
-        { "value": "24", "label": "24 horas (por defecto)", "labelEn": "24-hour (default)" },
-        { "value": "12", "label": "12 horas (AM/PM)", "labelEn": "12-hour (AM/PM)" }
+        {
+          "value": "24",
+          "label": "24 horas (por defecto)",
+          "labelEn": "24-hour (default)"
+        },
+        {
+          "value": "12",
+          "label": "12 horas (AM/PM)",
+          "labelEn": "12-hour (AM/PM)"
+        }
       ]
     },
     {
@@ -60,8 +73,16 @@
       "type": "select",
       "default": "fixed",
       "options": [
-        { "value": "fixed", "label": "Siempre visible (por defecto)", "labelEn": "Always visible (default)" },
-        { "value": "hide", "label": "Ocultar reloj", "labelEn": "Hide clock" }
+        {
+          "value": "fixed",
+          "label": "Siempre visible (por defecto)",
+          "labelEn": "Always visible (default)"
+        },
+        {
+          "value": "hide",
+          "label": "Ocultar reloj",
+          "labelEn": "Hide clock"
+        }
       ]
     },
     {
@@ -77,8 +98,42 @@
       "type": "select",
       "default": "hide",
       "options": [
-        { "value": "fixed", "label": "Siempre visible", "labelEn": "Always visible" },
-        { "value": "hide", "label": "Ocultar reloj (por defecto)", "labelEn": "Hide clock (default)" }
+        {
+          "value": "fixed",
+          "label": "Siempre visible",
+          "labelEn": "Always visible"
+        },
+        {
+          "value": "hide",
+          "label": "Ocultar reloj (por defecto)",
+          "labelEn": "Hide clock (default)"
+        }
+      ]
+    },
+    {
+      "key": "endsAt",
+      "label": "Termina a las...",
+      "labelEn": "Ends at...",
+      "type": "select",
+      "default": "off",
+      "hint": "Hora en que termina lo que ves. «Ocultar»: solo con los controles.",
+      "hintEn": "When what you watch ends. \"Hide\": only with controls on screen.",
+      "options": [
+        {
+          "value": "off",
+          "label": "Desactivar (por defecto)",
+          "labelEn": "Off (default)"
+        },
+        {
+          "value": "fixed",
+          "label": "Siempre visible",
+          "labelEn": "Always visible"
+        },
+        {
+          "value": "hide",
+          "label": "Ocultar",
+          "labelEn": "Hide"
+        }
       ]
     },
     {
@@ -94,10 +149,26 @@
       "type": "select",
       "default": "normal",
       "options": [
-        { "value": "small", "label": "Pequeño", "labelEn": "Small" },
-        { "value": "normal", "label": "Normal (por defecto)", "labelEn": "Normal (default)" },
-        { "value": "large", "label": "Grande", "labelEn": "Large" },
-        { "value": "xlarge", "label": "Muy grande", "labelEn": "Extra large" }
+        {
+          "value": "small",
+          "label": "Pequeño",
+          "labelEn": "Small"
+        },
+        {
+          "value": "normal",
+          "label": "Normal (por defecto)",
+          "labelEn": "Normal (default)"
+        },
+        {
+          "value": "large",
+          "label": "Grande",
+          "labelEn": "Large"
+        },
+        {
+          "value": "xlarge",
+          "label": "Muy grande",
+          "labelEn": "Extra large"
+        }
       ]
     },
     {
@@ -107,14 +178,46 @@
       "type": "select",
       "default": "auto",
       "options": [
-        { "value": "auto", "label": "Blanco de Kino (por defecto)", "labelEn": "Kino white (default)" },
-        { "value": "white", "label": "Blanco", "labelEn": "White" },
-        { "value": "yellow", "label": "Amarillo", "labelEn": "Yellow" },
-        { "value": "cyan", "label": "Cian", "labelEn": "Cyan" },
-        { "value": "green", "label": "Verde", "labelEn": "Green" },
-        { "value": "orange", "label": "Naranja", "labelEn": "Orange" },
-        { "value": "pink", "label": "Rosa", "labelEn": "Pink" },
-        { "value": "black", "label": "Negro", "labelEn": "Black" }
+        {
+          "value": "auto",
+          "label": "Blanco de Kino (por defecto)",
+          "labelEn": "Kino white (default)"
+        },
+        {
+          "value": "white",
+          "label": "Blanco",
+          "labelEn": "White"
+        },
+        {
+          "value": "yellow",
+          "label": "Amarillo",
+          "labelEn": "Yellow"
+        },
+        {
+          "value": "cyan",
+          "label": "Cian",
+          "labelEn": "Cyan"
+        },
+        {
+          "value": "green",
+          "label": "Verde",
+          "labelEn": "Green"
+        },
+        {
+          "value": "orange",
+          "label": "Naranja",
+          "labelEn": "Orange"
+        },
+        {
+          "value": "pink",
+          "label": "Rosa",
+          "labelEn": "Pink"
+        },
+        {
+          "value": "black",
+          "label": "Negro",
+          "labelEn": "Black"
+        }
       ]
     }
   ]
