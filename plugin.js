@@ -1,12 +1,6 @@
-// Reloj del reproductor (versión de una sola pieza): la hora arriba y la fecha debajo, en dos líneas de un mismo elemento.
-// Sin desplazamientos, para que Kino lo dibuje completo desde el primer instante. Fondo transparente.
-// Solo se ajustan el tamaño y el color de la letra. Siempre usa la hora del aparato. Sin red y sin botones.
-// La persona elige por separado, en TV en vivo y en series y películas, si el reloj va siempre visible ("clock-fixed") o solo con los controles ("clock").
-// En series y películas, además, puede activar "Termina a las 22:40" (apagado por defecto), siempre visible o solo con los controles,
-// aparte del reloj.
-//
+// Reloj del reproductor: la hora arriba y la fecha debajo, en dos líneas de un mismo elemento. Fondo transparente.
+// En TV en vivo se puede mover el reloj a la izquierda (ajuste "liveLeft"); en series y películas no se mueve.
 // Kino deja como máximo 3 elementos por plugin: "ends" (con los controles), "clock" (con los controles) y "clock-fixed" (fijo).
-// Cuando el reloj y "Termina a las" van los dos fijos, comparten "clock-fixed": la segunda línea muestra "Termina a las…" en lugar de la fecha.
 
 const DAYS = { es: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"], en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] };
 const MONTHS = {
@@ -16,12 +10,10 @@ const MONTHS = {
 
 const pad = (n) => String(n).padStart(2, "0");
 
-/** "es" o "en" según el `lang` del contexto ("es-CO", "en-US"); cualquier otro se lee como español. */
 function langOf(lang) {
   return typeof lang === "string" && lang.toLowerCase().startsWith("en") ? "en" : "es";
 }
 
-/** La hora "HH:mm" y la fecha ("jue 5 nov" en español, "Thu Nov 5" en inglés) del instante [now] en el reloj del aparato. */
 function clockParts(now, lang, hour12) {
   const l = langOf(lang);
   const h = now.getHours();
@@ -35,12 +27,10 @@ function clockParts(now, lang, hour12) {
   return { time, date };
 }
 
-// Ancho aproximado de cada carácter (en em) para centrar la hora sobre la fecha con espacios fijos.
 const EM = { ":": 0.26, " ": 0.25, i: 0.24, j: 0.24, l: 0.24, t: 0.33, f: 0.33, r: 0.34, m: 0.85, w: 0.75 };
 const width = (s) => [...s].reduce((a, c) => a + (EM[c] !== undefined ? EM[c] : 0.55), 0);
 const NBSP = "\u00A0";
 
-/** La hora con espacios fijos al inicio para que quede centrada sobre la fecha (si la fecha es más ancha). */
 function centered(time, date) {
   const n = Math.max(0, Math.round((width(date) - width(time)) / 2 / EM[" "]));
   return NBSP.repeat(n) + time;
@@ -50,6 +40,9 @@ const COLORS = { white: "#FFFFFF", yellow: "#FFD54F", cyan: "#4DD0E1", green: "#
 const TRANSPARENT = "#00000000";
 const SIZES = ["small", "normal", "large", "xlarge"];
 
+// Si el reloj se mueve hacia el lado contrario, cambia -1 por 1.
+const LEFT_SIGN = -1;
+
 const setting = (key) => {
   try {
     return kino.config.get(key);
@@ -58,10 +51,6 @@ const setting = (key) => {
   }
 };
 
-/**
- * "Termina a las 22:40": la hora a la que acaba lo que suena, contando lo que falta (duración menos posición) y la velocidad.
- * Es null cuando Kino no da la duración: en vivo, el contexto mínimo (títulos privados o que no son de ningún plugin) o un reproductor que no la sabe.
- */
 function endsText(context, hour12) {
   if (!context || context.live === true) return null;
   const pos = context.positionMs;
@@ -72,38 +61,37 @@ function endsText(context, hour12) {
   return langOf(context.lang) === "en" ? `Ends at ${time}` : `Termina a las ${time}`;
 }
 
-/** La respuesta del slot: el reloj, y "Termina a las" si la persona lo activó; y cuándo volver a preguntar (un minuto es lo máximo que permite Kino). */
 export async function playerSlot(context) {
   const hour12 = setting("format") === "12";
   const { time, date } = clockParts(new Date(), context && context.lang, hour12);
-  // Cada apartado tiene su ajuste: "fixed" (siempre visible, elemento "clock-fixed") u "hide" (solo con los controles, elemento "clock").
-  // Si el ajuste falta: TV en vivo queda fijo y series y películas con los controles.
   const live = !!(context && context.live === true);
   const mode = setting(live ? "liveMode" : "vodMode");
   const fixed = mode === "fixed" || mode === "hide" ? mode === "fixed" : live;
 
   const size = setting("size");
   const color = COLORS[setting("color")];
+  // Desplazamiento a la izquierda: solo en TV en vivo.
+  const leftN = live ? Number(setting("liveLeft")) : 0;
+  const left = Number.isFinite(leftN) && leftN > 0 ? LEFT_SIGN * leftN : 0;
+
   const dress = (it) => {
     it.background = TRANSPARENT;
     if (SIZES.includes(size) && size !== "normal") it.size = size;
     if (color) it.color = color;
+    if (left !== 0) it.left = left;
     return it;
   };
 
-  // "Termina a las": desactivado por defecto; "fixed" (siempre visible) u "hide" (solo con los controles).
   const endsMode = setting("endsAt");
   const ends = endsMode === "fixed" || endsMode === "hide" ? endsText(context, hour12) : null;
   const endsFixed = endsMode === "fixed";
 
   const items = [];
   if (ends && endsFixed && fixed) {
-    // Reloj y "Termina a las" fijos a la vez: comparten el único elemento fijo; la segunda línea es "Termina a las…" en lugar de la fecha.
     items.push(dress({ id: "clock-fixed", text: `${centered(time, ends)}\n${ends}` }));
   } else {
     items.push(dress({ id: fixed ? "clock-fixed" : "clock", text: `${centered(time, date)}\n${date}` }));
     if (ends) {
-      // Con los controles: el elemento "ends". Fijo (con el reloj solo con controles): el elemento fijo, que el reloj no usa.
       items.push(dress({ id: endsFixed ? "clock-fixed" : "ends", text: ends }));
     }
   }
@@ -111,12 +99,11 @@ export async function playerSlot(context) {
   return { items, refreshMs: 60000 };
 }
 
-/** El slot no tiene botones, así que Kino nunca llama esto; la capacidad igual exige la exportación. */
 export async function playerSlotAction() {
   return null;
 }
 
-// ===== Pantalla del menú (nuevo) =====
+// ===== Pantalla del menú =====
 
 export async function screen({ state }) {
   const now = state && typeof state.now === "number" ? state.now : Date.now();
