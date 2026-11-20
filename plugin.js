@@ -40,6 +40,10 @@ const COLORS = { white: "#FFFFFF", yellow: "#FFD54F", cyan: "#4DD0E1", green: "#
 const TRANSPARENT = "#00000000";
 const SIZES = ["small", "normal", "large", "xlarge"];
 
+// Opacidad de la hora fija (ajuste "fixedOpacity", en %): el valor es el canal alfa que se le agrega al color (#RRGGBBAA).
+// Kino nunca dibuja una letra con menos de la mitad de opacidad (un alfa menor se sube a la mitad), por eso el ajuste llega solo hasta 50 %.
+const OPACITY_ALPHA = { 75: "BF", 50: "80" };
+
 // Si el reloj se mueve hacia el lado contrario, cambia -1 por 1.
 const LEFT_SIGN = -1;
 
@@ -50,6 +54,11 @@ const setting = (key) => {
     return undefined;
   }
 };
+
+/** El alfa de la opacidad elegida, o null con 100 % (por defecto), sin ajuste o con un valor que no es de la lista. */
+function opacityAlpha() {
+  return OPACITY_ALPHA[Number(setting("fixedOpacity"))] || null;
+}
 
 function endsText(context, hour12) {
   if (!context || context.live === true) return null;
@@ -73,12 +82,15 @@ export async function playerSlot(context) {
   // Desplazamiento a la izquierda: solo en TV en vivo.
   const leftN = live ? Number(setting("liveLeft")) : 0;
   const left = Number.isFinite(leftN) && leftN > 0 ? LEFT_SIGN * leftN : 0;
+  const alpha = opacityAlpha();
 
   const dress = (it) => {
     it.background = TRANSPARENT;
     if (SIZES.includes(size) && size !== "normal") it.size = size;
     if (color) it.color = color;
     if (left !== 0) it.left = left;
+    // Solo la hora fija ("clock-fixed"): la opacidad se la da el alfa del color (con "Blanco de Kino" se usa blanco).
+    if (alpha && it.id === "clock-fixed") it.color = (color || "#FFFFFF") + alpha;
     return it;
   };
 
